@@ -1521,7 +1521,7 @@ class PlayState extends MusicBeatState
 					sEnding = 'week2 end';
 					startCountdown();
 				case 'god-eater':
-					f = 'finale end';
+					sEnding = 'finale end';
 					if (!Main.skipDes)
 					{
 						godIntro();
@@ -5711,4 +5711,589 @@ class PlayState extends MusicBeatState
 
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
+	}
+	#end
+	
+	public function godIntro()
+	{
+		dad.playAnim('back', true);
+		new FlxTimer().start(3, function(tmr:FlxTimer)
+		{
+			dad.playAnim('snap', true);
+			new FlxTimer().start(0.85, function(tmr2:FlxTimer)
+			{
+				FlxG.sound.play(Paths.sound('snap'));
+				FlxG.sound.play(Paths.sound('undSnap'));
+				sShake = 10;
+				//pon el sonido con los efectos circulares
+				new FlxTimer().start(0.06, function(tmr3:FlxTimer)
+				{
+					dad.playAnim('snapped', true);
+				});
+				new FlxTimer().start(1.5, function(tmr4:FlxTimer)
+				{
+					//la camara tiembla y puede ser que aparezcan rocas?
+					new FlxTimer().start(0.001, function(shkUp:FlxTimer)
+					{
+						sShake += 0.51;
+						if (!godCutEnd) shkUp.reset(0.001);
+					});
+					new FlxTimer().start(1, function(tmr5:FlxTimer)
+					{
+						add(new MansionDebris(-300, -120, 'ceil', 1, 1, -4, -40));
+						add(new MansionDebris(0, -120, 'ceil', 1, 1, -4, -5));
+						add(new MansionDebris(200, -120, 'ceil', 1, 1, -4, 40));
+
+						sShake += 5;
+						FlxG.sound.play(Paths.sound('ascend'));
+						boyfriend.playAnim('hit');
+						godCutEnd = true;
+						new FlxTimer().start(0.4, function(tmr6:FlxTimer)
+						{
+							godMoveGf = true;
+							boyfriend.playAnim('hit');
+						});
+						new FlxTimer().start(1, function(tmr9:FlxTimer)
+						{
+							boyfriend.playAnim('scared', true);
+						});
+						new FlxTimer().start(2, function(tmr7:FlxTimer)
+						{
+							dad.playAnim('idle', true);
+							FlxG.sound.play(Paths.sound('shagFly'));
+							godMoveSh = true;
+							new FlxTimer().start(1.5, function(tmr8:FlxTimer)
+							{
+								startCountdown();
+							});
+						});
+					});
+				});	
+			});
+		});
+		new FlxTimer().start(0.001, function(shk:FlxTimer)
+		{
+			if (sShake > 0)
+			{
+				sShake -= 0.5;
+				FlxG.camera.angle = FlxG.random.float(-sShake, sShake);
+			}
+			shk.reset(0.001);
+		});
+	}
+
+	var curLight:Int = 0;
+	var curLightEvent:Int = 0;
+
+	var scoob:Character;
+	var cs_time:Int = 0;
+	var cs_wait:Bool = false;
+	var cs_zoom:Float = 1;
+	var cs_slash_dim:FlxSprite;
+	var cs_sfx:FlxSound;
+	var cs_mus:FlxSound;
+	var sh_body:FlxSprite;
+	var sh_head:FlxSprite;
+	var cs_cam:FlxObject;
+	var cs_black:FlxSprite;
+	var sh_ang:FlxSprite;
+	var sh_ang_eyes:FlxSprite;
+	var cs_bg:FlxSprite;
+	var cs_reset:Bool = false;
+	var nex:Float = 1;
+
+	public function ssCutscene()
+	{
+		cs_cam = new FlxObject(0, 0, 1, 1);
+		cs_cam.x = 605;
+		cs_cam.y = 410;
+		add(cs_cam);
+		camFollowPos.destroy();
+		FlxG.camera.follow(cs_cam, LOCKON, 0.01);
+
+		Main.menuBad = true;
+		new FlxTimer().start(0.002, function(tmr:FlxTimer)
+		{
+			switch (cs_time)
+			{
+				case 1:
+					cs_zoom = 0.65;
+				case 25:
+					//scoob = new Character(1700, 290, 'scooby', false);
+					scoob.playAnim('walk', true);
+					scoob.x = 1700;
+					scoob.y = 290;
+					//scoob.playAnim('walk');
+				case 240:
+					scoob.playAnim('idle', true);
+				case 340:
+					burstRelease(dad.getMidpoint().x, dad.getMidpoint().y);
+
+					dadGroup.remove(dad);
+					dad = new Character(dad.x, dad.y, 'shaggy');
+					dadGroup.add(dad);
+					dad.playAnim('idle', true);
+				case 390:
+					remove(burst);
+				case 420:
+					if (!cs_wait)
+					{
+						csDial('found_scooby');
+						schoolIntro(0);
+						cs_wait = true;
+						cs_reset = true;
+
+						cs_mus = FlxG.sound.load(Paths.sound('cs_happy'));
+						cs_mus.play();
+						cs_mus.looped = true;
+					}
+				case 540:
+					scoob.playAnim('scare', true);
+					cs_mus.fadeOut(2, 0);
+				case 900:
+					FlxG.sound.play(Paths.sound('blur'));
+					scoob.playAnim('blur', true);
+					scoob.x -= 200;
+					scoob.y += 100;
+					scoob.angle = 23;
+					dad.playAnim('catch', true);
+				case 903:
+					scoob.x = -4000;
+					scoob.angle = 0;
+				case 940:
+					dad.playAnim('hold', true);
+					cs_sfx = FlxG.sound.load(Paths.sound('scared'));
+					cs_sfx.play();
+					cs_sfx.looped = true;
+				case 1200:
+					if (!cs_wait)
+					{
+						csDial('scooby_hold_talk');
+						schoolIntro(0);
+						cs_wait = true;
+						cs_reset = true;
+
+						cs_mus.stop();
+						cs_mus = FlxG.sound.load(Paths.sound('cs_drums'));
+						cs_mus.play();
+						cs_mus.looped = true;
+					}
+				case 1201:
+					cs_sfx.stop();
+					cs_mus.stop();
+					FlxG.sound.play(Paths.sound('counter_back'));
+					cs_slash_dim = new FlxSprite(-500, -400).makeGraphic(FlxG.width * 4, FlxG.height * 4, FlxColor.WHITE);
+					cs_slash_dim.scrollFactor.set();
+					add(cs_slash_dim);
+					dad.playAnim('h_half', true);
+					gf.playAnim('kill', true);
+					scoob.playAnim('half', true);
+					scoob.x += 4100;
+					scoob.y -= 150;
+
+					scoob.x -= 90;
+					scoob.y -= 252;
+				case 1700:
+					scoob.playAnim('fall', true);
+					cs_cam.x -= 150;
+				case 1740:
+					FlxG.sound.play(Paths.sound('body_fall'));
+				case 2000:
+					if (!cs_wait)
+					{
+						gf.playAnim('danceRight', true);
+						csDial('gf_sass');
+						schoolIntro(0);
+						cs_wait = true;
+						cs_reset = true;
+					}
+				case 2150:
+					dad.playAnim('fall', true);
+				case 2180:
+					FlxG.sound.play(Paths.sound('shaggy_kneel'));
+				case 2245:
+					FlxG.sound.play(Paths.sound('body_fall'));
+				case 2280:
+					dad.playAnim('kneel', true);
+					sh_head = new FlxSprite(440, 100);
+					sh_head.y = 100 + FlxG.random.int(-0, 0);
+					sh_head.frames = Paths.getSparrowAtlas('bshaggy');
+					sh_head.animation.addByPrefix('idle', "bshaggy_head_still", 30);
+					sh_head.animation.addByPrefix('turn', "bshaggy_head_transform", 30);
+					sh_head.animation.addByPrefix('idle2', "bsh_head2_still", 30);
+					sh_head.animation.play('turn');
+					sh_head.animation.play('idle');
+					sh_head.antialiasing = true;
+
+					sh_ang = new FlxSprite(0, 0);
+					sh_ang.frames = Paths.getSparrowAtlas('bshaggy');
+					sh_ang.animation.addByPrefix('idle', "bsh_angry", 30);
+					sh_ang.animation.play('idle');
+					sh_ang.antialiasing = true;
+
+					sh_ang_eyes = new FlxSprite(0, 0);
+					sh_ang_eyes.frames = Paths.getSparrowAtlas('bshaggy');
+					sh_ang_eyes.animation.addByPrefix('stare', "bsh_eyes", 30);
+					sh_ang_eyes.animation.play('stare');
+					sh_ang_eyes.antialiasing = true;
+
+					cs_bg = new FlxSprite(-500, -80);
+					cs_bg.frames = Paths.getSparrowAtlas('cs_bg');
+					cs_bg.animation.addByPrefix('back', "cs_back_bg", 30);
+					cs_bg.animation.addByPrefix('stare', "cs_bg", 30);
+					cs_bg.animation.play('back');
+					cs_bg.antialiasing = true;
+					cs_bg.setGraphicSize(Std.int(cs_bg.width * 1.1));
+
+					cs_sfx = FlxG.sound.load(Paths.sound('powerup'));
+				case 2500:
+					add(cs_bg);
+					add(sh_head);
+
+					sh_body = new FlxSprite(200, 250);
+					sh_body.frames = Paths.getSparrowAtlas('bshaggy');
+					sh_body.animation.addByPrefix('idle', "bshaggy_body_still", 30);
+					sh_body.animation.play('idle');
+					sh_body.antialiasing = true;
+					add(sh_body);
+
+					cs_mus = FlxG.sound.load(Paths.sound('cs_cagaste'));
+					cs_mus.looped = false;
+					cs_mus.play();
+					cs_cam.x += 150;
+					FlxG.camera.follow(cs_cam, LOCKON, 1);
+				case 3100:
+					burstRelease(1000, 300);
+				case 3580:
+					burstRelease(1000, 300);
+					cs_sfx.play();
+					cs_sfx.looped = false;
+					FlxG.camera.angle = 10;
+				case 4000:
+					burstRelease(1000, 300);
+					cs_sfx.play();
+					FlxG.camera.angle = -20;
+					sh_head.animation.play('turn');
+					sh_head.offset.set(0, 60);
+
+					cs_sfx = FlxG.sound.load(Paths.sound('charge'));
+					cs_sfx.play();
+					cs_sfx.looped = true;
+				case 4003:
+					cs_mus.play(true, 12286 - 337);
+				case 4065:
+					sh_head.animation.play('idle2');
+				case 4550:
+					remove(sh_head);
+					remove(sh_body);
+					cs_sfx.stop();
+
+
+					sh_ang.x = -140;
+					sh_ang.y = -5;
+
+					sh_ang_eyes.x = 688;
+					sh_ang_eyes.y = 225;
+
+					add(sh_ang);
+					add(sh_ang_eyes);
+
+					cs_bg.animation.play('stare');
+
+					cs_black = new FlxSprite(-500, -400).makeGraphic(FlxG.width * 4, FlxG.height * 4, FlxColor.BLACK);
+					cs_black.scrollFactor.set();
+					add(cs_black);
+
+					cs_mus.play(true, 16388);
+				case 6000:
+					cs_black.alpha = 2;
+					cs_mus.stop();
+				case 6100:
+					endSong();
+			}
+			if (cs_time >= 25 && cs_time <= 240)
+			{
+				scoob.x -= 6;
+				scoob.playAnim('walk');
+			}
+			if (cs_time > 240 && cs_time < 540)
+			{
+				scoob.playAnim('idle');
+			}
+			if (cs_time > 940 && cs_time < 1201)
+			{
+				dad.playAnim('hold');
+			}
+			if (cs_time > 1201 && cs_time < 2500)
+			{
+				cs_slash_dim.alpha -= 0.003;
+			}
+			if (cs_time >= 2500 && cs_time < 4550)
+			{
+				cs_zoom += 0.0001;
+			}
+			if (cs_time >= 5120 && cs_time <= 6000)
+			{
+				cs_black.alpha -= 0.0015;
+			}
+			if (cs_time >= 3580 && cs_time < 4000)
+			{
+				sh_head.y = 100 + FlxG.random.int(-5, 5);
+			}
+			if (cs_time >= 4000 && cs_time <= 4548)
+			{
+				sh_head.x = 440 + FlxG.random.int(-10, 10);
+				sh_body.x = 200 + FlxG.random.int(-5, 5);
+			}
+
+			if (cs_time == 3400 || cs_time == 3450 || cs_time == 3500 || cs_time == 3525 || cs_time == 3550 || cs_time == 3560 || cs_time == 3570)
+			{
+				burstRelease(1000, 300);
+			}
+
+			FlxG.camera.zoom += (cs_zoom - FlxG.camera.zoom) / 12;
+			FlxG.camera.angle += (0 - FlxG.camera.angle) / 12;
+			if (!cs_wait)
+			{
+				cs_time ++;
+			}
+			tmr.reset(0.002);
+		});
+	}
+
+	var dfS:Float = 1;
+	var toDfS:Float = 1;
+	public function finalCutscene()
+	{
+		cs_zoom = defaultCamZoom;
+		cs_cam = new FlxObject(0, 0, 1, 1);
+		camFollow.x = boyfriend.getMidpoint().x - 100;
+		camFollow.y = boyfriend.getMidpoint().y - 100;
+		cs_cam.x = camFollow.x;
+		cs_cam.y = camFollow.y;
+		add(cs_cam);
+		camFollow.destroy();
+		FlxG.camera.follow(cs_cam, LOCKON, 0.01);
+
+		new FlxTimer().start(0.002, function(tmr:FlxTimer)
+		{
+			switch (cs_time)
+			{
+				case 200:
+					cs_cam.x -= 500;
+					cs_cam.y -= 200;
+				case 400:
+					dad.playAnim('smile');
+				case 500:
+					if (!cs_wait)
+					{
+						var exStr = '';
+						if (alterRoute == 1)
+						{
+							exStr += '_alter';
+						}
+						csDial('sh_amazing' + exStr);
+						schoolIntro(0);
+						cs_wait = true;
+						cs_reset = true;
+					}
+				case 700:
+					godCutEnd = false;
+					FlxG.sound.play(Paths.sound('burst'));
+					if (maskObj != null) maskObj.x -= 5000;
+					//maskCollGroup.remove(maskObj);
+					dad.playAnim('stand', true);
+					dad.x = 100;
+					dad.y = 100;
+					boyfriend.x = 770;
+					boyfriend.y = 450;
+					gf.x = 400;
+					gf.y = 130;
+					gf.scrollFactor.set(0.95, 0.95);
+					gf.setGraphicSize(Std.int(gf.width));
+					cs_cam.y = boyfriend.y;
+					cs_cam.x += 100;
+					cs_zoom = 0.8;
+					FlxG.camera.zoom = cs_zoom;
+					scoob.x = dad.x - 400;
+					scoob.y = 290;
+					scoob.flipX = true;
+					remove(shaggyT);
+					FlxG.camera.follow(cs_cam, LOCKON, 1);
+				case 800:
+					if (!cs_wait)
+					{
+						var exStr = '';
+						if (alterRoute == 1)
+						{
+							exStr += '_alter';
+						}
+						csDial('sh_expo' + exStr);
+						schoolIntro(0);
+						cs_wait = true;
+						cs_reset = true;
+
+						cs_mus = FlxG.sound.load(Paths.sound('cs_finale'));
+						cs_mus.looped = true;
+						cs_mus.play();
+					}
+				case 840:
+					FlxG.sound.play(Paths.sound('exit'));
+					doorFrame.alpha = 1;
+					doorFrame.x -= 90;
+					doorFrame.y -= 130;
+					toDfS = 700;
+				case 1150:
+					if (!cs_wait)
+					{
+						csDial('sh_bye');
+						schoolIntro(0);
+						cs_wait = true;
+						cs_reset = true;
+					}
+				case 1400:
+					FlxG.sound.play(Paths.sound('exit'));
+					toDfS = 1;
+				case 1645:
+					cs_black = new FlxSprite(-500, -400).makeGraphic(FlxG.width * 4, FlxG.height * 4, FlxColor.BLACK);
+					cs_black.scrollFactor.set();
+					cs_black.alpha = 0;
+					add(cs_black);
+					cs_wait = true;
+					modCredits();
+					cs_time ++;
+				case -1:
+					if (!cs_wait)
+					{
+						csDial('troleo');
+						schoolIntro(0);
+						cs_wait = true;
+						cs_reset = true;
+					}
+				case 1651:
+					endSong();
+			}
+			if (cs_time > 700)
+			{
+				scoob.playAnim('idle');
+			}
+			if (cs_time > 1150)
+			{
+				scoob.alpha -= 0.004;
+				dad.alpha -= 0.004;
+			}
+			FlxG.camera.zoom += (cs_zoom - FlxG.camera.zoom) / 12;
+			if (!cs_wait)
+			{
+				cs_time ++;
+			}
+
+			dfS += (toDfS - dfS) / 18;
+			doorFrame.setGraphicSize(Std.int(dfS));
+			tmr.reset(0.002);
+		});
+	}
+	var title:FlxSprite;
+	var thanks:Alphabet;
+	var endtxt:Alphabet;
+	public function modCredits()
+	{
+		FlxG.sound.play(Paths.sound('cs_credits'));
+		new FlxTimer().start(0.002, function(btmr:FlxTimer)
+		{
+			cs_black.alpha += 0.0025;
+			btmr.reset(0.002);
+		});
+
+		new FlxTimer().start(3, function(tmrt:FlxTimer)
+		{
+			title = new FlxSprite(FlxG.width / 2 - 400, FlxG.height / 2 - 300).loadGraphic(Paths.image('sh_title'));
+			title.setGraphicSize(Std.int(title.width * 1.2));
+			title.antialiasing = true;
+			title.scrollFactor.set();
+			title.centerOffsets();
+			//title.active = false;
+			add(title);
+
+			new FlxTimer().start(2.5, function(tmrth:FlxTimer)
+			{
+				thanks = new Alphabet(0, FlxG.height / 2 + 300, "THANKS FOR PLAYING THIS MOD", true, false);
+				thanks.screenCenter(X);
+				thanks.x -= 150;
+				add(thanks);
+
+				new FlxTimer().start(2.5, function(tmrth:FlxTimer)
+				{
+					MASKstate.endingUnlock(0);
+					endtxt = new Alphabet(6, FlxG.height / 2 + 380, "MAIN ENDING", true, false);
+					endtxt.screenCenter(X);
+					endtxt.x -= 150;
+					add(endtxt);
+
+					new FlxTimer().start(12, function(gback:FlxTimer)
+					{
+						cs_wait = false;
+					});
+				});
+			});
+		});
+	}
+
+	public function lgCutscene()
+	{
+		new FlxTimer().start(0.002, function(tmr:FlxTimer)
+		{
+			switch (cs_time)
+			{
+				case 0:
+					if (!cs_wait)
+					{
+						textIndex = 'upd/4-1';
+						schoolIntro(0);
+						cs_wait = true;
+						cs_reset = true;
+					}	
+				case 40:
+					FlxG.sound.play(Paths.sound('exit'));
+					doorFrame.alpha = 1;
+					doorFrame.y -= 110;
+					toDfS = 600;
+				case 200:
+					if (!cs_wait)
+					{
+						textIndex = 'upd/4-2';
+						schoolIntro(0);
+						cs_wait = true;
+						cs_reset = true;
+					}
+				case 480:
+					FlxG.sound.play(Paths.sound('exit'));
+					toDfS = 1;
+				case 720:
+					var video:MP4Handler = new MP4Handler();
+
+					video.playMP4(Paths.video('zoinks'));
+					video.finishCallback = function()
+					{
+						endSong();
+					}
+			}
+			if (cs_time > 220)
+			{
+				dad.alpha -= 0.004;
+			}
+			if (!cs_wait)
+			{
+				cs_time ++;
+			}
+			dfS += (toDfS - dfS) / 18;
+			doorFrame.setGraphicSize(Std.int(dfS));
+			tmr.reset(0.002);
+		});
+	}
+
+	public function csDial(puta:String)
+	{
+		textIndex  = 'cs/' + puta;
+	}
 }
