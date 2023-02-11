@@ -5713,31 +5713,31 @@ class PlayState extends MusicBeatState
 	var curLightEvent:Int = -1;
 	}
 	
-	public function godIntro()
+	public function godIntro();
 	{
 		dad.playAnim('back', true);
-		new FlxTimer().start(3, function(tmr:FlxTimer)
+		new FlxTimer().start(3, function(tmr:FlxTimer);
 		{
 			dad.playAnim('snap', true);
-			new FlxTimer().start(0.85, function(tmr2:FlxTimer)
+			new FlxTimer().start(0.85, function(tmr2:FlxTimer);
 			{
 				FlxG.sound.play(Paths.sound('snap'));
 				FlxG.sound.play(Paths.sound('undSnap'));
 				sShake = 10;
 				//pon el sonido con los efectos circulares
-				new FlxTimer().start(0.06, function(tmr3:FlxTimer)
+				new FlxTimer().start(0.06, function(tmr3:FlxTimer);
 				{
 					dad.playAnim('snapped', true);
 				});
-				new FlxTimer().start(1.5, function(tmr4:FlxTimer)
+				new FlxTimer().start(1.5, function(tmr4:FlxTimer);
 				{
 					//la camara tiembla y puede ser que aparezcan rocas?
-					new FlxTimer().start(0.001, function(shkUp:FlxTimer)
+					new FlxTimer().start(0.001, function(shkUp:FlxTimer);
 					{
 						sShake += 0.51;
 						if (!godCutEnd) shkUp.reset(0.001);
 					});
-					new FlxTimer().start(1, function(tmr5:FlxTimer)
+					new FlxTimer().start(1, function(tmr5:FlxTimer);
 					{
 						add(new MansionDebris(-300, -120, 'ceil', 1, 1, -4, -40));
 						add(new MansionDebris(0, -120, 'ceil', 1, 1, -4, -5));
@@ -5747,21 +5747,21 @@ class PlayState extends MusicBeatState
 						FlxG.sound.play(Paths.sound('ascend'));
 						boyfriend.playAnim('hit');
 						godCutEnd = true;
-						new FlxTimer().start(0.4, function(tmr6:FlxTimer)
+						new FlxTimer().start(0.4, function(tmr6:FlxTimer);
 						{
 							godMoveGf = true;
 							boyfriend.playAnim('hit');
 						});
-						new FlxTimer().start(1, function(tmr9:FlxTimer)
+						new FlxTimer().start(1, function(tmr9:FlxTimer);
 						{
 							boyfriend.playAnim('scared', true);
 						});
-						new FlxTimer().start(2, function(tmr7:FlxTimer)
+						new FlxTimer().start(2, function(tmr7:FlxTimer);
 						{
 							dad.playAnim('idle', true);
 							FlxG.sound.play(Paths.sound('shagFly'));
 							godMoveSh = true;
-							new FlxTimer().start(1.5, function(tmr8:FlxTimer)
+							new FlxTimer().start(1.5, function(tmr8:FlxTimer);
 							{
 								startCountdown();
 							});
@@ -5770,7 +5770,7 @@ class PlayState extends MusicBeatState
 				});	
 			});
 		});
-		new FlxTimer().start(0.001, function(shk:FlxTimer)
+		new FlxTimer().start(0.001, function(shk:FlxTimer);
 		{
 			if (sShake > 0)
 			{
