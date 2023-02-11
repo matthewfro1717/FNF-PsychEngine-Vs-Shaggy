@@ -1449,7 +1449,133 @@ class PlayState extends MusicBeatState
 
 				case 'ugh' | 'guns' | 'stress':
 					tankIntro();
+                                case 'where-are-you':
+					textIndex = '1-pre-whereareyou';
+					schoolIntro(1);
+				case 'eruption':
+					sEnding = 'here we go';
+					textIndex = '2-pre-eruption';
+					schoolIntro(0);
+				case 'kaio-ken':
+					//sEnding = 'week1 end';
+					startCountdown();
+				case 'whats-new':
+					textIndex = '5-pre-whatsnew';
+					sEnding = 'post whats new';
+					schoolIntro(1);
+				case 'blast':
+					sEnding = 'post blast';
+					startCountdown();
 
+					if (!FlxG.save.data.p_maskGot[0])
+					{
+						maskObj = new MASKcoll(1, boyfriend.x - 200, -300, 0);
+						maskCollGroup.add(maskObj);
+					}
+				case 'super-saiyan':
+					sEnding = 'week2 end';
+					startCountdown();
+				case 'god-eater':
+					f = 'finale end';
+					if (!Main.skipDes)
+					{
+						godIntro();
+						Main.skipDes = true;
+					}
+					else
+					{
+						godCutEnd = true;
+						godMoveGf = true;
+						godMoveSh = true;
+						new FlxTimer().start(1, function(tmr:FlxTimer)
+						{
+							startCountdown();
+						});
+					}
+				case 'soothing-power':
+					if (Main.skipDes)
+					{
+						startCountdown();
+					}
+					else
+					{
+						dad.playAnim('sit', true);
+						camFollow.x -= 300;
+						Main.skipDes = true;
+						textIndex = 'upd/1';
+						afterAction = 'stand up';
+						schoolIntro(2);
+					}
+				case 'thunderstorm':
+					if (Main.skipDes)
+					{
+						startCountdown();
+					}
+					else
+					{
+						Main.skipDes = true;
+						textIndex = 'upd/2';
+						schoolIntro(0);
+					}
+				case 'dissasembler':
+					sEnding = 'last goodbye';
+					if (Main.skipDes)
+					{
+						startCountdown();
+					}
+					else
+					{
+						Main.skipDes = true;
+						textIndex = 'upd/3';
+						schoolIntro(0);
+					}
+					if (!FlxG.save.data.p_maskGot[2])
+					{
+						maskObj = new MASKcoll(3, 0, 0, 0, camFollowPos, camHUD);
+						maskObj.cameras = [camHUD];
+						maskCollGroup.add(maskObj);
+					}
+				case 'astral-calamity':
+					if (FlxG.save.data.p_partsGiven < 4 || FlxG.save.data.ending[2])
+					{
+						sEnding = 'wb ending';
+						if (Main.skipDes)
+						{
+							startCountdown();
+						}
+						else
+						{
+							Main.skipDes = true;
+							textIndex = 'upd/wb1';
+							schoolIntro(1);
+						}
+					}
+					else
+					{
+						textIndex = 'upd/zeph1';
+						afterAction = 'possess';
+						//sEnding = 'wb ending';
+						schoolIntro(1);
+					}
+				case 'talladega':
+					sEnding = 'zeph ending';
+					if (Main.skipDes)
+					{
+						startCountdown();
+					}
+					else
+					{
+						camFollow.y -= 200;
+						camFollowPos.y = camFollow.y;
+						Main.skipDes = true;
+						textIndex = 'upd/zeph2';
+						new FlxTimer().start(2, function(tmr:FlxTimer)
+						{
+							FlxG.sound.playMusic(Paths.music('zephyrus'));
+						});
+						afterAction = "zephyrus";
+						schoolIntro(2);
+					}
 				default:
 					startCountdown();
 			}
