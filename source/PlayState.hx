@@ -1499,18 +1499,15 @@ class PlayState extends MusicBeatState
 					tankIntro();
                                 case 'where-are-you':
 					textIndex = '1-pre-whereareyou';
-					schoolIntro(1);
 				case 'eruption':
 					sEnding = 'here we go';
 					textIndex = '2-pre-eruption';
-					schoolIntro(0);
 				case 'kaio-ken':
 					//sEnding = 'week1 end';
 					startCountdown();
 				case 'whats-new':
 					textIndex = '5-pre-whatsnew';
 					sEnding = 'post whats new';
-					schoolIntro(1);
 				case 'blast':
 					sEnding = 'post blast';
 					startCountdown();
@@ -1552,7 +1549,6 @@ class PlayState extends MusicBeatState
 						Main.skipDes = true;
 						textIndex = 'upd/1';
 						afterAction = 'stand up';
-						schoolIntro(2);
 					}
 				case 'thunderstorm':
 					if (Main.skipDes)
@@ -1563,7 +1559,6 @@ class PlayState extends MusicBeatState
 					{
 						Main.skipDes = true;
 						textIndex = 'upd/2';
-						schoolIntro(0);
 					}
 				case 'dissasembler':
 					sEnding = 'last goodbye';
@@ -1575,7 +1570,6 @@ class PlayState extends MusicBeatState
 					{
 						Main.skipDes = true;
 						textIndex = 'upd/3';
-						schoolIntro(0);
 					}
 					if (!FlxG.save.data.p_maskGot[2])
 					{
@@ -1603,7 +1597,6 @@ class PlayState extends MusicBeatState
 						textIndex = 'upd/zeph1';
 						afterAction = 'possess';
 						//sEnding = 'wb ending';
-						schoolIntro(1);
 					}
 				case 'talladega':
 					sEnding = 'zeph ending';
@@ -1622,7 +1615,6 @@ class PlayState extends MusicBeatState
 							FlxG.sound.playMusic(Paths.music('zephyrus'));
 						});
 						afterAction = "zephyrus";
-						schoolIntro(2);
 					}
 				default:
 					startCountdown();
