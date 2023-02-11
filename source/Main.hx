@@ -30,6 +30,7 @@ using StringTools;
 
 class Main extends Sprite
 {
+	public static var skipDes:Bool = false;
 	var game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
