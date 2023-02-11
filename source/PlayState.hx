@@ -224,6 +224,26 @@ class PlayState extends MusicBeatState
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
 
+	var tb_x = 60;
+	var tb_y = 410;
+	var tb_fx = -510 + 40;
+	var tb_fy = 320;
+	var tb_rx = 200 - 55;
+	var jx:Int;
+
+	var curr_char:Int;
+	var curr_dial:Int;
+	var dropText:FlxText;
+	var tbox:FlxSprite;
+	var talk:Int;
+	var tb_appear:Int;
+	var dcd:Int;
+	var fimage:String;
+	var fsprite:FlxSprite;
+	var fside:Int;
+	var black:FlxSprite;
+	var tb_open:Bool = false;
+
 	var dadbattleBlack:BGSprite;
 	var dadbattleLight:BGSprite;
 	var dadbattleSmokes:FlxSpriteGroup;
