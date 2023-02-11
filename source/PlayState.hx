@@ -331,6 +331,48 @@ class PlayState extends MusicBeatState
 	var cutTime = 0;
 	var sEnding = 'none';
 
+	//ass crack
+	var sh_r:Float = 600;
+	var sShake:Float = 0;
+	var ldx:Float = 0;
+	var ldy:Float = 0;
+	var lstep:Float = 0;
+	var legs_in = false;
+	var gf_launched:Bool = false;
+
+	var godCutEnd:Bool = false;
+	var godMoveBf:Bool = true;
+	var godMoveGf:Bool = false;
+	var godMoveSh:Bool = false;
+
+	var rotInd:Int = 0;
+
+	//oooOOooOoO
+	public static var rotCam = false;
+	var rotCamSpd:Float = 1;
+	var rotCamRange:Float = 10;
+	var rotCamInd = 0;
+
+	//WB ending
+	var wb_state = 0;
+	var wb_speed:Float = 0;
+	var wb_time = 0;
+	var wb_eX:Float = 0;
+	var wb_eY:Float = 0;
+
+	//ZEPHYRUS vars mask vars
+	var bfControlY:Float = 0;
+	var maskCreated = false;
+	var maskObj:MASKcoll;
+	var alterRoute:Int = 0;
+	var zephRot:Int = 0;
+	var zephTime:Int = 0;
+	var zephVsp:Float = 0;
+	var zephGrav:Float = 0.15;
+
+	//zeph ending
+	var zend_state = 0;
+	var zend_time = 0;
 	// Debug buttons
 	private var debugKeysChart:Array<FlxKey>;
 	private var debugKeysCharacter:Array<FlxKey>;
@@ -1902,6 +1944,10 @@ class PlayState extends MusicBeatState
 	var black:FlxSprite;
 	var tb_open:Bool = false;
 	var dialogueCount:Int = 0;
+	
+        var afterAction:String = 'countdown';
+
+	var textIndex = 'example';
 
 	public var psychDialogue:DialogueBoxPsych;
 	//You don't have to add a song, just saying. You can just do "startDialogue(dialogueJson);" and it should work
