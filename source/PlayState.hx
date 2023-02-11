@@ -5713,7 +5713,7 @@ class PlayState extends MusicBeatState
 	var curLightEvent:Int = -1;
 	}
 	
-	public function godIntro();
+	private function godIntro();
 	{
 		dad.playAnim('back', true);
 		new FlxTimer().start(3, function(tmr:FlxTimer);
