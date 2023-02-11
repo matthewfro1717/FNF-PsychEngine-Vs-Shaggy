@@ -2160,6 +2160,73 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	function faceRender():Void
+	{
+		jx = tb_fx;
+		if (dside[curr_dial] == -1)
+		{
+			jx = tb_rx;
+		}
+		fsprite = new FlxSprite(tb_x + Std.int(tbox.width / 2) + jx, tb_y - tb_fy, Paths.image('face/f_' + fimage));
+		fsprite.centerOffsets(true);
+		fsprite.antialiasing = true;
+		fsprite.updateHitbox();
+		fsprite.scrollFactor.set();
+		add(fsprite);
+	}
+
+	function superShaggy()
+	{
+		new FlxTimer().start(0.008, function(ct:FlxTimer)
+		{
+			switch (cutTime)
+			{
+				case 0:
+					camFollow.x = dad.getMidpoint().x - 100;
+					camFollow.y = dad.getMidpoint().y;
+					camLerp = 2;
+				case 15:
+					dad.playAnim('powerup');
+				case 48:
+					dad.playAnim('idle_s');
+					burst = new FlxSprite(-1110, 0);
+					FlxG.sound.play(Paths.sound('burst'));
+					remove(burst);
+					burst = new FlxSprite(dad.getMidpoint().x - 1000, dad.getMidpoint().y - 100);
+					burst.frames = Paths.getSparrowAtlas('characters/shaggy');
+					burst.animation.addByPrefix('burst', "burst", 30);
+					burst.animation.play('burst');
+					//burst.setGraphicSize(Std.int(burst.width * 1.5));
+					burst.antialiasing = true;
+					add(burst);
+
+					FlxG.sound.play(Paths.sound('powerup'), 1);
+				case 62:
+					burst.y = 0;
+					remove(burst);
+				case 95:
+					FlxG.camera.angle = 0;
+				case 200:
+					endSong();
+			}
+
+			var ssh:Float = 45;
+			var stime:Float = 30;
+			var corneta:Float = (stime - (cutTime - ssh)) / stime;
+
+			if (cutTime % 6 >= 3)
+			{
+				corneta *= -1;
+			}
+			if (cutTime >= ssh && cutTime <= ssh + stime)
+			{
+				FlxG.camera.angle = corneta * 5;
+			}
+			cutTime ++;
+			ct.reset(0.008);
+		});
+	}
+
 	var startTimer:FlxTimer;
 	var finishTimer:FlxTimer = null;
 
