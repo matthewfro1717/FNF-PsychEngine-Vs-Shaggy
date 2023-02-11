@@ -169,7 +169,7 @@ class PlayState extends MusicBeatState
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
-	public var playerStrums:FlxTypedGroup<StrumNote	
+	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public static var maskMouseHud:FlxTypedGroup<FlxSprite>;
 	public static var maskCollGroup:FlxTypedGroup<MASKcoll>;
 	public static var maskTrailGroup:FlxTypedGroup<FlxTrail>; //FUCK.
