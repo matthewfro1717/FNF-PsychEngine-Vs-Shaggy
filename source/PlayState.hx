@@ -5713,7 +5713,7 @@ class PlayState extends MusicBeatState
 	var curLightEvent:Int = -1;
 	}
 	
-	private function godIntro();
+	public function godIntro();
 	{
 		dad.playAnim('back', true);
 		new FlxTimer().start(3, function(tmr:FlxTimer);
@@ -5764,12 +5764,12 @@ class PlayState extends MusicBeatState
 							new FlxTimer().start(1.5, function(tmr8:FlxTimer);
 							{
 								startCountdown();
-							});
-						});
-					});
-				});	
-			});
-		});
+							}
+						}
+					}
+				}
+			}
+		}
 		new FlxTimer().start(0.001, function(shk:FlxTimer);
 		{
 			if (sShake > 0)
