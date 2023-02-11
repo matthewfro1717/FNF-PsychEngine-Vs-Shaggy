@@ -154,7 +154,6 @@ class PlayState extends MusicBeatState
 	public var dad:Character = null;
 	public var gf:Character = null;
 	public var boyfriend:Boyfriend = null;
-	public static var bfAccess:Boyfriend;
 
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
@@ -171,11 +170,6 @@ class PlayState extends MusicBeatState
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
-	public static var maskMouseHud:FlxTypedGroup<FlxSprite>;
-	public static var maskCollGroup:FlxTypedGroup<MASKcoll>;
-	public static var maskTrailGroup:FlxTypedGroup<FlxTrail>; //FUCK.
-	public static var maskFxGroup:FlxTypedGroup<FlxSprite>;
-
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
 	public var camZooming:Bool = false;
@@ -224,11 +218,11 @@ class PlayState extends MusicBeatState
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
+	var curLight:Int = 0;
+	var curLightEvent:Int = 0;
+
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
-	var dchar:Array<String>;
-	var dface:Array<String>;
-	var dside:Array<Int>;
 
 	var dadbattleBlack:BGSprite;
 	var dadbattleLight:BGSprite;
@@ -316,69 +310,7 @@ class PlayState extends MusicBeatState
 	public var luaArray:Array<FunkinLua> = [];
 	private var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
 	public var introSoundsSuffix:String = '';
-	
-	//shaggg
-	var rock:FlxSprite;
-	var gf_rock:FlxSprite;
-	var doorFrame:FlxSprite;
-	var legs:FlxSprite;
-	var shaggyT:FlxTrail;
-	var legT:FlxTrail;
-	var burst:FlxSprite;
 
-	//cum
-	var camLerp:Float = 1;
-	var bgDim:FlxSprite;
-	var fullDim = false;
-	var noticeTime = 0;
-	var dimGo:Bool = false;
-
-	//cutscenxs
-	var cutTime = 0;
-	var sEnding = 'none';
-
-	//ass crack
-	var sh_r:Float = 600;
-	var sShake:Float = 0;
-	var ldx:Float = 0;
-	var ldy:Float = 0;
-	var lstep:Float = 0;
-	var legs_in = false;
-	var gf_launched:Bool = false;
-
-	var godCutEnd:Bool = false;
-	var godMoveBf:Bool = true;
-	var godMoveGf:Bool = false;
-	var godMoveSh:Bool = false;
-
-	var rotInd:Int = 0;
-
-	//oooOOooOoO
-	public static var rotCam = false;
-	var rotCamSpd:Float = 1;
-	var rotCamRange:Float = 10;
-	var rotCamInd = 0;
-
-	//WB ending
-	var wb_state = 0;
-	var wb_speed:Float = 0;
-	var wb_time = 0;
-	var wb_eX:Float = 0;
-	var wb_eY:Float = 0;
-
-	//ZEPHYRUS vars mask vars
-	var bfControlY:Float = 0;
-	var maskCreated = false;
-	var maskObj:MASKcoll;
-	var alterRoute:Int = 0;
-	var zephRot:Int = 0;
-	var zephTime:Int = 0;
-	var zephVsp:Float = 0;
-	var zephGrav:Float = 0.15;
-
-	//zeph ending
-	var zend_state = 0;
-	var zend_time = 0;
 	// Debug buttons
 	private var debugKeysChart:Array<FlxKey>;
 	private var debugKeysCharacter:Array<FlxKey>;
@@ -1497,110 +1429,7 @@ class PlayState extends MusicBeatState
 
 				case 'ugh' | 'guns' | 'stress':
 					tankIntro();
-                                case 'where-are-you':
-					textIndex = '1-pre-whereareyou';
-				case 'eruption':
-					sEnding = 'here we go';
-					textIndex = '2-pre-eruption';
-				case 'kaio-ken':
-					//sEnding = 'week1 end';
-					startCountdown();
-				case 'whats-new':
-					textIndex = '5-pre-whatsnew';
-					sEnding = 'post whats new';
-				case 'blast':
-					sEnding = 'post blast';
-					startCountdown();
 
-					if (!FlxG.save.data.p_maskGot[0])
-					{
-						maskObj = new MASKcoll(1, boyfriend.x - 200, -300, 0);
-						maskCollGroup.add(maskObj);
-					}
-				case 'super-saiyan':
-					sEnding = 'week2 end';
-					startCountdown();
-				case 'god-eater':
-					sEnding = 'finale end';
-				case 'soothing-power':
-					if (Main.skipDes)
-					{
-						startCountdown();
-					}
-					else
-					{
-						dad.playAnim('sit', true);
-						camFollow.x -= 300;
-						Main.skipDes = true;
-						textIndex = 'upd/1';
-						afterAction = 'stand up';
-					}
-				case 'thunderstorm':
-					if (Main.skipDes)
-					{
-						startCountdown();
-					}
-					else
-					{
-						Main.skipDes = true;
-						textIndex = 'upd/2';
-					}
-				case 'dissasembler':
-					sEnding = 'last goodbye';
-					if (Main.skipDes)
-					{
-						startCountdown();
-					}
-					else
-					{
-						Main.skipDes = true;
-						textIndex = 'upd/3';
-					}
-					if (!FlxG.save.data.p_maskGot[2])
-					{
-						maskObj = new MASKcoll(3, 0, 0, 0, camFollowPos, camHUD);
-						maskObj.cameras = [camHUD];
-						maskCollGroup.add(maskObj);
-					}
-				case 'astral-calamity':
-					if (FlxG.save.data.p_partsGiven < 4 || FlxG.save.data.ending[2])
-					{
-						sEnding = 'wb ending';
-						if (Main.skipDes)
-						{
-							startCountdown();
-						}
-						else
-						{
-							Main.skipDes = true;
-							textIndex = 'upd/wb1';
-							schoolIntro(1);
-						}
-					}
-					else
-					{
-						textIndex = 'upd/zeph1';
-						afterAction = 'possess';
-						//sEnding = 'wb ending';
-					}
-				case 'talladega':
-					sEnding = 'zeph ending';
-					if (Main.skipDes)
-					{
-						startCountdown();
-					}
-					else
-					{
-						camFollow.y -= 200;
-						camFollowPos.y = camFollow.y;
-						Main.skipDes = true;
-						textIndex = 'upd/zeph2';
-						new FlxTimer().start(2, function(tmr:FlxTimer)
-						{
-							FlxG.sound.playMusic(Paths.music('zephyrus'));
-						});
-						afterAction = "zephyrus";
-					}
 				default:
 					startCountdown();
 			}
@@ -1748,7 +1577,6 @@ class PlayState extends MusicBeatState
 
 	function set_playbackRate(value:Float):Float
 	{
-		if(generatedMusic)
 		{
 			if(vocals != null) vocals.pitch = value;
 			FlxG.sound.music.pitch = value;
@@ -1907,31 +1735,7 @@ class PlayState extends MusicBeatState
 			startCountdown();
 	}
 
-	var tb_x = 60;
-	var tb_y = 410;
-	var tb_fx = -510 + 40;
-	var tb_fy = 320;
-	var tb_rx = 200 - 55;
-	var jx:Int;
-
-	var curr_char:Int;
-	var curr_dial:Int;
-	var dropText:FlxText;
-	var tbox:FlxSprite;
-	var talk:Int;
-	var tb_appear:Int;
-	var dcd:Int;
-	var fimage:String;
-	var fsprite:FlxSprite;
-	var fside:Int;
-	var black:FlxSprite;
-	var tb_open:Bool = false;
 	var dialogueCount:Int = 0;
-	
-        var afterAction:String = 'countdown';
-
-	var textIndex = 'example';
-
 	public var psychDialogue:DialogueBoxPsych;
 	//You don't have to add a song, just saying. You can just do "startDialogue(dialogueJson);" and it should work
 	public function startDialogue(dialogueFile:DialogueFile, ?song:String = null):Void
@@ -2347,8 +2151,7 @@ class PlayState extends MusicBeatState
 					zoomBack();
 				});
 		}
-	}
-
+		}
 	function faceRender():Void
 	{
 		jx = tb_fx;
@@ -5624,6 +5427,7 @@ class PlayState extends MusicBeatState
 		setOnLuas('ratingFC', ratingFC);
 	}
 
+	#if ACHIEVEMENTS_ALLOWED
 	private function checkForAchievement(achievesToCheck:Array<String> = null):String
 	{
 		if(chartingMode) return null;
@@ -5691,4 +5495,5 @@ class PlayState extends MusicBeatState
 		}
 		return null;
 	}
+	#end
 }
