@@ -31,37 +31,4 @@ class BGElement extends FlxSprite
 
 		updateHitbox();
 	}
-
-	override function update(elapsed:Float)
-	{
-		if (PlayState.bgEdit && PlayState.bgTarget == movID)
-		{
-			if (FlxG.keys.justPressed.K)
-				sc += 0.05;
-			if (FlxG.keys.justPressed.I)
-				sc -= 0.05;
-
-			var spd = 4;
-			if (FlxG.keys.pressed.SHIFT)
-				spd = 10;
-
-			if (FlxG.keys.pressed.D)
-				x += spd;
-			if (FlxG.keys.pressed.A)
-				x -= spd;
-			if (FlxG.keys.pressed.S)
-				y += spd;
-			if (FlxG.keys.pressed.W)
-				y -= spd;
-
-			scrollFactor.set(sc, sc);
-
-			if (FlxG.keys.justPressed.SPACE)
-			{
-				FlxG.sound.play(Paths.sound('Charting_3'));
-				trace(imgName + ': ' + x + ',' + y + ',' + sc);
-			}
-		}
-		super.update(elapsed);
-	}
 }
