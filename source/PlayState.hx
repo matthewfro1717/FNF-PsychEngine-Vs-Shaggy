@@ -223,6 +223,9 @@ class PlayState extends MusicBeatState
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
+	var dchar:Array<String>;
+	var dface:Array<String>;
+	var dside:Array<Int>;
 
 	var tb_x = 60;
 	var tb_y = 410;
