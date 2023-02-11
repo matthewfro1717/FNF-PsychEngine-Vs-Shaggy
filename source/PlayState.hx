@@ -319,7 +319,25 @@ class PlayState extends MusicBeatState
 	private var keysArray:Array<Dynamic>;
 	private var controlArray:Array<String>;
 
-	var precacheList:Map<String, String> = new Map<String, String>();
+	//shaggg
+	var rock:FlxSprite;
+	var gf_rock:FlxSprite;
+	var doorFrame:FlxSprite;
+	var legs:FlxSprite;
+	var shaggyT:FlxTrail;
+	var legT:FlxTrail;
+	var burst:FlxSprite;
+
+	//cum
+	var camLerp:Float = 1;
+	var bgDim:FlxSprite;
+	var fullDim = false;
+	var noticeTime = 0;
+	var dimGo:Bool = false;
+
+	//cutscenxs
+	var cutTime = 0;
+	var sEnding = 'none';	var precacheList:Map<String, String> = new Map<String, String>();
 	
 	// stores the last judgement object
 	public static var lastRating:FlxSprite;
