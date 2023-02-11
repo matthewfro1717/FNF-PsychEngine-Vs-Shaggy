@@ -1,22 +1,50 @@
 {
 	"songs": [
-		["Spookeez", "spooky", [34, 51, 68]],
-		["South", "spooky", [34, 51, 68]],
-		["Monster", "monster", [34, 51, 68]]
+		[
+			"whats-new",
+			"shaggy",
+			[
+				106,
+				133,
+				135
+			]
+		],
+		[
+			"blast",
+			"sshaggy",
+			[
+				66,
+				113,
+				253
+			]
+		],
+		[
+			"super-saiyan",
+			"sshaggy",
+			[
+				146,
+				73,
+				0
+			]
+		]
 	],
-
+	"hiddenUntilUnlocked": false,
+	"hideFreeplay": false,
+	"weekBackground": "halloween",
+	"difficulties": "Mania,",
 	"weekCharacters": [
-		"spooky",
+		"shaggy",
 		"bf",
 		"gf"
 	],
-	"weekBackground": "halloween",
-
-	"storyName": "Spooky Month",
-	"weekBefore": "week1",
-	"weekName": "Week 2",
-	"startUnlocked": true,
-
+	"storyName": "the rematch",
+	"weekName": "Custom Week",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
 	"hideStoryMode": false,
-	"hideFreeplay": false
+	"weekBefore": "tutorial",
+	"startUnlocked": true
 }

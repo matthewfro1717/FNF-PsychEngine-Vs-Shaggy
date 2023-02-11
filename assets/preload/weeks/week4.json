@@ -1,22 +1,50 @@
 {
 	"songs": [
-		["Satin Panties", "mom", [252, 150, 215]],
-		["High", "mom", [252, 150, 215]],
-		["Milf", "mom", [252, 150, 215]]
+		[
+			"soothing-power",
+			"rshaggy",
+			[
+				106,
+				153,
+				253
+			]
+		],
+		[
+			"thunderstorm",
+			"rshaggy",
+			[
+				66,
+				33,
+				253
+			]
+		],
+		[
+			"dissasembler",
+			"rshaggy",
+			[
+				255,
+				0,
+				0
+			]
+		]
 	],
-	
+	"hiddenUntilUnlocked": false,
+	"hideFreeplay": false,
+	"weekBackground": "outside",
+	"difficulties": "Mania,",
 	"weekCharacters": [
-		"mom",
+		"rshaggy",
 		"bf",
 		"gf"
 	],
-	"weekBackground": "limo",
-
-	"storyName": "MOMMY MUST MURDER",
-	"weekBefore": "week3",
-	"weekName": "Week 4",
-	"startUnlocked": true,
-
+	"storyName": "bonus match",
+	"weekName": "Custom Week",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
 	"hideStoryMode": false,
-	"hideFreeplay": false
+	"weekBefore": "tutorial",
+	"startUnlocked": true
 }

@@ -1,0 +1,41 @@
+{
+	"songs": [
+		[
+			"talladega",
+			"zshaggy",
+			[
+				0,
+				33,
+				0
+			]
+		],
+        [
+			"BIG-SHOT",
+			"spamton",
+			[
+				33,
+				33,
+				33
+			]
+		]
+	],
+	"hiddenUntilUnlocked": true,
+	"hideFreeplay": false,
+	"weekBackground": "lava",
+	"difficulties": "Mania,",
+	"weekCharacters": [
+		"",
+		"bf",
+		"gf"
+	],
+	"storyName": "brbrrbrbrbrbrbrbrbrrbrbrbrbrbrbrbrbrbrbrbrbrbrbrbbrbrbrbrbrbrbrbrbrbrbrbrbb",
+	"weekName": "Custom Week",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"hideStoryMode": false,
+	"weekBefore": "chapter6",
+	"startUnlocked": false
+}
