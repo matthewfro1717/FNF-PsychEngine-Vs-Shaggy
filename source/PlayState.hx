@@ -663,7 +663,6 @@ class PlayState extends MusicBeatState
 				legs.updateHitbox();
 				legs.offset.set(legs.frameWidth / 2, 10);
 				legs.alpha = 0;
-				}
 
 			case 'out':
 
