@@ -90,6 +90,10 @@ class DialogueBox extends FlxSpriteGroup
 				var face:FlxSprite = new FlxSprite(320, 170).loadGraphic(Paths.image('weeb/spiritFaceForward'));
 				face.setGraphicSize(Std.int(face.width * 6));
 				add(face);
+
+			case 'Where-are-you' | 'Eruption', 'Kaio-ken' | 'Whats-new' | 'Blast' | 'Super-saiyan' | 'GOD-EATER' | 'Soothing-power' | 'Thunderstorm' | 'Dissasembler' | 'Astral-calamity' | 'Talladega':
+				hasDialog = true;
+				box = new FlxSprite('TextBox');
 		}
 
 		this.dialogueList = dialogueList;
