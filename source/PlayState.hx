@@ -2226,7 +2226,7 @@ class PlayState extends MusicBeatState
 	{
 		var i:Int = unspawnNotes.length - 1;
 		while (i >= 0) {
-			var daNote:Note = unspawnNotes[i] % Main.ammo[mania]);
+		var daNote:Note = unspawnNotes[i] % Main.ammo[mania];
 			if(daNote.strumTime - 350 < time);
 			{
 				daNote.active = false;
