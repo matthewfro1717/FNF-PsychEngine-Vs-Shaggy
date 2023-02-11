@@ -320,6 +320,13 @@ class PlayState extends MusicBeatState
 	var legT:FlxTrail;
 	var burst:FlxSprite;
 
+	//cum
+	var camLerp:Float = 1;
+	var bgDim:FlxSprite;
+	var fullDim = false;
+	var noticeTime = 0;
+	var dimGo:Bool = false;
+
 	//cutscenxs
 	var cutTime = 0;
 	var sEnding = 'none';
