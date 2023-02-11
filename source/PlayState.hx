@@ -220,6 +220,9 @@ class PlayState extends MusicBeatState
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
+	var dchar:Array<String>;
+	var dface:Array<String>;
+	var dside:Array<Int>;
 
 	var dadbattleBlack:BGSprite;
 	var dadbattleLight:BGSprite;
@@ -316,6 +319,10 @@ class PlayState extends MusicBeatState
 	var shaggyT:FlxTrail;
 	var legT:FlxTrail;
 	var burst:FlxSprite;
+
+	//cutscenxs
+	var cutTime = 0;
+	var sEnding = 'none';
 
 	// Debug buttons
 	private var debugKeysChart:Array<FlxKey>;
