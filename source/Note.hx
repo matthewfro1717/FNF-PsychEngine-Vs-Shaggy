@@ -50,11 +50,7 @@ class Note extends FlxSprite
 
 	public var colorSwap:ColorSwap;
 	public var inEditor:Bool = false;
-	
-	public static var scales:Array<Float> = [0.7, 0.6, 0.55, 0.46];
-	public static var swidths:Array<Float> = [160, 120, 110, 90];
-	public static var posRest:Array<Int> = [0, 35, 50, 70];
-	
+
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
 	public var earlyHitMult:Float = 0.5;
@@ -176,7 +172,7 @@ class Note extends FlxSprite
 		isSustainNote = sustainNote;
 		this.inEditor = inEditor;
 
-		x += (ClientPrefs.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50 - posRest[mania];
+		x += (ClientPrefs.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
 		this.strumTime = strumTime;
@@ -189,18 +185,16 @@ class Note extends FlxSprite
 			colorSwap = new ColorSwap();
 			shader = colorSwap.shader;
 
-			x += swidths[mania] * swagWidth * (noteData % Main.ammo[mania]);
+			x += swagWidth * (noteData);
 			if(!isSustainNote && noteData > -1 && noteData < 4) { //Doing this 'if' check to fix the warnings on Senpai songs
 				var animToPlay:String = '';
 				animToPlay = colArray[noteData % 4];
-				animation.play(Main.gfxLetter[Main.gfxIndex[mania][noteData]]);
+				animation.play(animToPlay + 'Scroll');
 			}
 		}
 
 		// trace(prevNote);
 
-		var mania = PlayState.SONG.mania;
-		
 		if(prevNote!=null)
 			prevNote.nextNote = this;
 
@@ -214,7 +208,7 @@ class Note extends FlxSprite
 			offsetX += width / 2;
 			copyAngle = false;
 
-			animation.play(Main.gfxLetter[Main.gfxIndex[mania][noteData]] + ' tail');
+			animation.play(colArray[noteData % 4] + 'holdend');
 
 			updateHitbox();
 
@@ -225,7 +219,7 @@ class Note extends FlxSprite
 
 			if (prevNote.isSustainNote)
 			{
-				prevNote.animation.play(Main.gfxLetter[Main.gfxIndex[mania][noteData]] + ' hold');
+				prevNote.animation.play(colArray[prevNote.noteData % 4] + 'hold');
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
 				if(PlayState.instance != null)
@@ -340,10 +334,11 @@ class Note extends FlxSprite
 	}
 
 	function loadPixelNoteAnims() {
-		if (!isSustainNote)
-			setGraphicSize(Std.int(ogW * scales[PlayState.SONG.mania]));
+		if(isSustainNote) {
+			animation.add(colArray[noteData] + 'holdend', [pixelInt[noteData] + 4]);
+			animation.add(colArray[noteData] + 'hold', [pixelInt[noteData]]);
 		} else {
-			setGraphicSize(Std.int(ogW * scales[PlayState.SONG.mania]), Std.int(ogH * scales[0]));
+			animation.add(colArray[noteData] + 'Scroll', [pixelInt[noteData] + 4]);
 		}
 	}
 
