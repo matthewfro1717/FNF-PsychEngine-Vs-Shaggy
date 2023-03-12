@@ -154,6 +154,7 @@ class PlayState extends MusicBeatState
 	public var dad:Character = null;
 	public var gf:Character = null;
 	public var boyfriend:Boyfriend = null;
+	public static var bfAccess:Boyfriend;
 
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
@@ -171,6 +172,10 @@ class PlayState extends MusicBeatState
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+	public static var maskMouseHud:FlxTypedGroup<FlxSprite>;
+	public static var maskCollGroup:FlxTypedGroup<MASKcoll>;
+	public static var maskTrailGroup:FlxTypedGroup<FlxTrail>; //FUCK.
+	public static var maskFxGroup:FlxTypedGroup<FlxSprite>;
 
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
@@ -246,6 +251,8 @@ class PlayState extends MusicBeatState
 	var fside:Int;
 	var black:FlxSprite;
 	var tb_open:Bool = false;
+
+	var afterAction:String = 'countdown';
 
 	var textIndex = 'example';
 
@@ -1049,6 +1056,15 @@ class PlayState extends MusicBeatState
 		bgDim.screenCenter();
 		bgDim.alpha = 0;
 		add(bgDim);
+		
+		maskTrailGroup = new FlxTypedGroup<FlxTrail>();
+		add(maskTrailGroup);
+
+		maskFxGroup = new FlxTypedGroup<FlxSprite>();
+		add(maskFxGroup);
+
+		maskCollGroup = new FlxTypedGroup<MASKcoll>();
+		add(maskCollGroup);
 
 		switch(curStage)
 		{
@@ -1160,6 +1176,7 @@ class PlayState extends MusicBeatState
 		startCharacterLua(dad.curCharacter);
 
 		boyfriend = new Boyfriend(0, 0, SONG.player1);
+		bfAccess = boyfriend;
 		startCharacterPos(boyfriend);
 		boyfriendGroup.add(boyfriend);
 		startCharacterLua(boyfriend.curCharacter);
@@ -1441,12 +1458,6 @@ class PlayState extends MusicBeatState
 				case 'blast':
 					sEnding = 'post blast';
 					startCountdown();
-
-					if (!FlxG.save.data.p_maskGot[0])
-					{
-						maskObj = new MASKcoll(1, boyfriend.x - 200, -300, 0);
-						maskCollGroup.add(maskObj);
-					}
 				case 'super-saiyan':
 					sEnding = 'week2 end';
 					startCountdown();
@@ -1504,26 +1515,17 @@ class PlayState extends MusicBeatState
 						textIndex = 'upd/3';
 						schoolIntro(0);
 					}
-					if (!FlxG.save.data.p_maskGot[2])
-					{
-						maskObj = new MASKcoll(3, 0, 0, 0, camFollowPos, camHUD);
-						maskObj.cameras = [camHUD];
-						maskCollGroup.add(maskObj);
-					}
 				case 'astral-calamity':
-					if (FlxG.save.data.p_partsGiven < 4 || FlxG.save.data.ending[2])
+					sEnding = 'wb ending';
+					if (Main.skipDes)
 					{
-						sEnding = 'wb ending';
-						if (Main.skipDes)
-						{
-							startCountdown();
-						}
-						else
-						{
-							Main.skipDes = true;
-							textIndex = 'upd/wb1';
-							schoolIntro(1);
-						}
+						startCountdown();
+					}
+					else
+					{
+						Main.skipDes = true;
+						textIndex = 'upd/wb1';
+						schoolIntro(1);
 					}
 					else
 					{
@@ -3565,8 +3567,6 @@ class PlayState extends MusicBeatState
 					no.cameras = [camHUD];
 					no.screenCenter();
 					add(no);
-				case 300:
-					System.exit(0);
 			}
 			noticeTime ++;
 		}
@@ -3990,6 +3990,23 @@ class PlayState extends MusicBeatState
 		var pressed:Bool = Reflect.getProperty(controls, key);
 		//trace('Control result: ' + pressed);
 		return pressed;
+	}
+
+	public function burstRelease(bX:Float, bY:Float)
+	{
+		FlxG.sound.play(Paths.sound('burst'));
+		remove(burst);
+		burst = new FlxSprite(bX - 1000, bY - 100);
+		burst.frames = Paths.getSparrowAtlas('characters/shaggy');
+		burst.animation.addByPrefix('burst', "burst", 30);
+		burst.animation.play('burst');
+		//burst.setGraphicSize(Std.int(burst.width * 1.5));
+		burst.antialiasing = true;
+		add(burst);
+		new FlxTimer().start(0.5, function(rem:FlxTimer)
+		{
+			remove(burst);
+		});
 	}
 
 	public function triggerEventNote(eventName:String, value1:String, value2:String) {
@@ -6157,6 +6174,74 @@ class PlayState extends MusicBeatState
 			}
 		}
 		return null;
+	}
+	
+	public function godIntro()
+	{
+		dad.playAnim('back', true);
+		new FlxTimer().start(3, function(tmr:FlxTimer)
+		{
+			dad.playAnim('snap', true);
+			new FlxTimer().start(0.85, function(tmr2:FlxTimer)
+			{
+				FlxG.sound.play(Paths.sound('snap'));
+				FlxG.sound.play(Paths.sound('undSnap'));
+				sShake = 10;
+				//pon el sonido con los efectos circulares
+				new FlxTimer().start(0.06, function(tmr3:FlxTimer)
+				{
+					dad.playAnim('snapped', true);
+				});
+				new FlxTimer().start(1.5, function(tmr4:FlxTimer)
+				{
+					//la camara tiembla y puede ser que aparezcan rocas?
+					new FlxTimer().start(0.001, function(shkUp:FlxTimer)
+					{
+						sShake += 0.51;
+						if (!godCutEnd) shkUp.reset(0.001);
+					});
+					new FlxTimer().start(1, function(tmr5:FlxTimer)
+					{
+						add(new MansionDebris(-300, -120, 'ceil', 1, 1, -4, -40));
+						add(new MansionDebris(0, -120, 'ceil', 1, 1, -4, -5));
+						add(new MansionDebris(200, -120, 'ceil', 1, 1, -4, 40));
+
+						sShake += 5;
+						FlxG.sound.play(Paths.sound('ascend'));
+						boyfriend.playAnim('hit');
+						godCutEnd = true;
+						new FlxTimer().start(0.4, function(tmr6:FlxTimer)
+						{
+							godMoveGf = true;
+							boyfriend.playAnim('hit');
+						});
+						new FlxTimer().start(1, function(tmr9:FlxTimer)
+						{
+							boyfriend.playAnim('scared', true);
+						});
+						new FlxTimer().start(2, function(tmr7:FlxTimer)
+						{
+							dad.playAnim('idle', true);
+							FlxG.sound.play(Paths.sound('shagFly'));
+							godMoveSh = true;
+							new FlxTimer().start(1.5, function(tmr8:FlxTimer)
+							{
+								startCountdown();
+							});
+						});
+					});
+				});	
+			});
+		});
+		new FlxTimer().start(0.001, function(shk:FlxTimer)
+		{
+			if (sShake > 0)
+			{
+				sShake -= 0.5;
+				FlxG.camera.angle = FlxG.random.float(-sShake, sShake);
+			}
+			shk.reset(0.001);
+		});
 	}
 
 	var curLight:Int = 0;
